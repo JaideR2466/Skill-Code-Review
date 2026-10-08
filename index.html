@@ -1,0 +1,1971 @@
+<!DOCTYPE html>
+<html lang="es" class="dark scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Code Review & Clean Code — AI Skill & Interactive Hub</title>
+  <meta name="description" content="Landing page completa de la AI Skill 'Code Review & Clean Code'. Auditoría de código, principios SOLID, seguridad OWASP, refactorización y documentación README completa.">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              cyan: '#06b6d4',
+              purple: '#8b5cf6',
+              blue: '#3b82f6',
+              emerald: '#10b981',
+              dark: '#080c16',
+              card: '#0f172a',
+              border: '#1e293b'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'Fira Code', 'monospace']
+          },
+          animation: {
+            'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0.0, 0.6, 1) infinite',
+            'float': 'float 6s ease-in-out infinite',
+            'scan': 'scan 2.5s ease-in-out infinite'
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-8px)' },
+            },
+            scan: {
+              '0%': { transform: 'translateY(0%)', opacity: '0.2' },
+              '50%': { transform: 'translateY(100%)', opacity: '0.8' },
+              '100%': { transform: 'translateY(0%)', opacity: '0.2' }
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #070b14;
+      color: #f1f5f9;
+      overflow-x: hidden;
+    }
+    
+    /* Subtle background grid pattern */
+    .bg-grid-pattern {
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+      background-size: 32px 32px;
+    }
+
+    /* Ambient Glows */
+    .glow-cyan {
+      box-shadow: 0 0 50px -10px rgba(6, 182, 212, 0.3);
+    }
+    .glow-purple {
+      box-shadow: 0 0 50px -10px rgba(139, 92, 246, 0.3);
+    }
+
+    /* Glassmorphism Styles */
+    .glass-nav {
+      background: rgba(8, 12, 22, 0.75);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .glass-panel {
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+    }
+    .glass-card {
+      background: rgba(15, 23, 42, 0.5);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .glass-card:hover {
+      background: rgba(20, 30, 55, 0.75);
+      border-color: rgba(6, 182, 212, 0.35);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 30px -10px rgba(6, 182, 212, 0.15);
+    }
+
+    /* Vibrant Gradient Text */
+    .gradient-text-hero {
+      background: linear-gradient(135deg, #38bdf8 0%, #818cf8 40%, #c084fc 70%, #f472b6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .gradient-text-cyan {
+      background: linear-gradient(135deg, #22d3ee 0%, #3b82f6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #090d16;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1e293b;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #334155;
+    }
+
+    /* Code Block styling */
+    pre code {
+      font-family: 'JetBrains Mono', monospace;
+    }
+  </style>
+</head>
+<body class="min-h-screen selection:bg-cyan-500 selection:text-black">
+
+  <!-- Ambient Lighting Elements -->
+  <div class="fixed top-0 left-1/4 w-[500px] h-[500px] bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none -z-10 animate-pulse-slow"></div>
+  <div class="fixed top-1/3 right-10 w-[450px] h-[450px] bg-purple-600/10 rounded-full blur-[130px] pointer-events-none -z-10 animate-pulse-slow" style="animation-delay: 2s;"></div>
+  <div class="fixed bottom-10 left-1/3 w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[140px] pointer-events-none -z-10"></div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+    <div class="bg-gray-900 border border-cyan-500/50 shadow-2xl shadow-cyan-500/20 text-white px-5 py-3 rounded-xl flex items-center space-x-3 backdrop-blur-md">
+      <i data-lucide="check-circle" class="w-5 h-5 text-cyan-400"></i>
+      <span id="toast-message" class="text-sm font-medium">Copiado al portapapeles</span>
+    </div>
+  </div>
+
+  <!-- Header / Navigation Bar -->
+  <nav class="fixed top-0 left-0 right-0 z-40 glass-nav">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      
+      <!-- Brand Logo -->
+      <a href="#" class="flex items-center space-x-3 group">
+        <div class="p-2 rounded-xl bg-gradient-to-tr from-cyan-500 via-blue-600 to-purple-600 text-white shadow-lg shadow-cyan-500/20 group-hover:scale-105 transition-transform">
+          <i data-lucide="code-2" class="w-5 h-5"></i>
+        </div>
+        <div class="flex flex-col">
+          <span class="font-extrabold text-base tracking-tight text-white flex items-center gap-1.5">
+            Code Review <span class="text-cyan-400">&</span> Clean Code
+            <span class="text-[10px] px-1.5 py-0.5 rounded bg-cyan-950 text-cyan-400 border border-cyan-800 font-mono">AI SKILL</span>
+          </span>
+          <span class="text-[10px] text-gray-400 hidden sm:block">Senior Engineer & Code Auditor</span>
+        </div>
+      </a>
+
+      <!-- Desktop Navigation Menu -->
+      <div class="hidden lg:flex items-center space-x-6 text-xs xl:text-sm font-medium text-gray-300">
+        <a href="#video-demo" class="hover:text-cyan-400 transition-colors flex items-center gap-1">
+          <i data-lucide="play" class="w-3.5 h-3.5 text-cyan-400"></i> Video Demo
+        </a>
+        <a href="#infografia" class="hover:text-cyan-400 transition-colors flex items-center gap-1">
+          <i data-lucide="image" class="w-3.5 h-3.5 text-purple-400"></i> Infografía
+        </a>
+        <a href="#como-funciona" class="hover:text-cyan-400 transition-colors">4 Pasos</a>
+        <a href="#solid" class="hover:text-cyan-400 transition-colors">SOLID</a>
+        <a href="#simulador" class="hover:text-cyan-400 transition-colors text-cyan-400 font-semibold flex items-center gap-1">
+          <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> Simulador
+        </a>
+        <a href="#ejemplo-diff" class="hover:text-cyan-400 transition-colors">Antes / Después</a>
+        <a href="#readme" class="hover:text-cyan-400 transition-colors flex items-center gap-1">
+          <i data-lucide="book-open" class="w-3.5 h-3.5 text-blue-400"></i> README
+        </a>
+        <a href="#skill-prompt" class="hover:text-cyan-400 transition-colors">Skill Prompt</a>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex items-center space-x-3">
+        <button onclick="scrollToSection('simulador')" class="px-4 py-2 text-xs sm:text-sm font-semibold rounded-xl bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 text-white hover:opacity-95 shadow-md shadow-cyan-500/25 transition-all flex items-center space-x-2">
+          <i data-lucide="terminal" class="w-4 h-4"></i>
+          <span class="hidden sm:inline">Probar Simulador</span>
+          <span class="sm:hidden">Probar</span>
+        </button>
+
+        <!-- Mobile Menu Toggle Button -->
+        <button onclick="toggleMobileMenu()" id="mobile-menu-btn" class="lg:hidden p-2 text-gray-400 hover:text-white rounded-lg focus:outline-none">
+          <i data-lucide="menu" class="w-6 h-6"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Dropdown Navigation -->
+    <div id="mobile-menu" class="hidden lg:hidden px-4 pt-2 pb-6 space-y-3 glass-panel border-b border-gray-800">
+      <a href="#video-demo" onclick="toggleMobileMenu()" class="block text-sm text-gray-300 hover:text-cyan-400 py-1">🎬 Video Demo</a>
+      <a href="#infografia" onclick="toggleMobileMenu()" class="block text-sm text-gray-300 hover:text-cyan-400 py-1">📊 Infografía Oficial</a>
+      <a href="#como-funciona" onclick="toggleMobileMenu()" class="block text-sm text-gray-300 hover:text-cyan-400 py-1">⚙️ ¿Cómo Funciona?</a>
+      <a href="#solid" onclick="toggleMobileMenu()" class="block text-sm text-gray-300 hover:text-cyan-400 py-1">📐 Principios SOLID</a>
+      <a href="#simulador" onclick="toggleMobileMenu()" class="block text-sm text-cyan-400 font-semibold py-1">✨ Simulador de Auditoría</a>
+      <a href="#ejemplo-diff" onclick="toggleMobileMenu()" class="block text-sm text-gray-300 hover:text-cyan-400 py-1">🔄 Comparativa Antes vs Después</a>
+      <a href="#readme" onclick="toggleMobileMenu()" class="block text-sm text-gray-300 hover:text-cyan-400 py-1">📖 Documentación README</a>
+      <a href="#skill-prompt" onclick="toggleMobileMenu()" class="block text-sm text-gray-300 hover:text-cyan-400 py-1">🤖 Prompt de la Skill (Markdown)</a>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <header class="relative pt-32 pb-20 md:pt-40 md:pb-28 bg-grid-pattern overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+      
+      <!-- Top Pill Tag -->
+      <div class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-cyan-950/70 border border-cyan-500/40 text-cyan-300 text-xs font-semibold mb-8 backdrop-blur-md shadow-lg shadow-cyan-950/50 animate-float">
+        <span class="flex h-2 w-2 rounded-full bg-cyan-400 animate-ping"></span>
+        <i data-lucide="bot" class="w-4 h-4 text-cyan-400"></i>
+        <span>AI Senior Engineer Skill • Clean Architecture & Auditoría Continua</span>
+      </div>
+
+      <!-- Main Headline -->
+      <h1 class="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight text-white max-w-5xl mx-auto leading-[1.12]">
+        Eleva tu código al estándar <br/>
+        <span class="gradient-text-hero">Senior & Clean Architecture</span>
+      </h1>
+
+      <!-- Subtitle -->
+      <p class="mt-6 text-base sm:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed font-normal">
+        Auditoría automatizada de software en segundos. Detecta al instante <span class="text-cyan-300 font-semibold">code smells</span>, 
+        violaciones <span class="text-purple-300 font-semibold">SOLID</span>, vulnerabilidades de seguridad <span class="text-emerald-300 font-semibold">OWASP</span> 
+        e ineficiencias de rendimiento, entregando refactorizaciones completas listas para producción.
+      </p>
+
+      <!-- CTA Buttons -->
+      <div class="mt-10 flex flex-wrap items-center justify-center gap-4">
+        <a href="#simulador" class="px-7 py-4 rounded-xl bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 text-white font-bold text-sm sm:text-base shadow-xl shadow-cyan-500/25 hover:shadow-cyan-500/40 hover:scale-[1.02] transition-all flex items-center space-x-2.5">
+          <i data-lucide="sparkles" class="w-5 h-5"></i>
+          <span>Probar Simulador Interactivo</span>
+        </a>
+
+        <a href="#video-demo" class="px-7 py-4 rounded-xl glass-panel text-white hover:text-cyan-300 font-semibold text-sm sm:text-base border border-gray-700/80 hover:border-cyan-500/60 hover:bg-gray-800/60 transition-all flex items-center space-x-2.5 shadow-lg">
+          <i data-lucide="play-circle" class="w-5 h-5 text-cyan-400"></i>
+          <span>Ver Video en Acción</span>
+        </a>
+
+        <a href="#readme" class="px-7 py-4 rounded-xl glass-panel text-gray-300 hover:text-white font-semibold text-sm sm:text-base border border-gray-800 hover:border-gray-600 hover:bg-gray-800/40 transition-all flex items-center space-x-2">
+          <i data-lucide="file-text" class="w-5 h-5 text-purple-400"></i>
+          <span>Leer README.md</span>
+        </a>
+      </div>
+
+      <!-- Quick Feature Pill Badges -->
+      <div class="mt-14 pt-8 border-t border-gray-800/80 max-w-4xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs font-mono text-gray-400">
+        <div class="p-2.5 rounded-lg bg-gray-900/50 border border-gray-800/80 flex items-center justify-center space-x-2">
+          <i data-lucide="check" class="w-4 h-4 text-cyan-400"></i>
+          <span>5 Principios SOLID</span>
+        </div>
+        <div class="p-2.5 rounded-lg bg-gray-900/50 border border-gray-800/80 flex items-center justify-center space-x-2">
+          <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400"></i>
+          <span>OWASP Top 10</span>
+        </div>
+        <div class="p-2.5 rounded-lg bg-gray-900/50 border border-gray-800/80 flex items-center justify-center space-x-2">
+          <i data-lucide="zap" class="w-4 h-4 text-yellow-400"></i>
+          <span>Análisis &lt; 1 Segundo</span>
+        </div>
+        <div class="p-2.5 rounded-lg bg-gray-900/50 border border-gray-800/80 flex items-center justify-center space-x-2">
+          <i data-lucide="refresh-cw" class="w-4 h-4 text-purple-400"></i>
+          <span>Refactor Listo</span>
+        </div>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Video Showcase Section (AI_analyzing_and_cleaning_code_20261008141921.mp4) -->
+  <section id="video-demo" class="py-20 relative bg-gray-950/70 border-y border-gray-800/80">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="text-center max-w-3xl mx-auto mb-12">
+        <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-md bg-blue-950/60 border border-blue-500/30 text-blue-300 text-xs font-semibold uppercase tracking-wider mb-4">
+          <i data-lucide="video" class="w-4 h-4"></i>
+          <span>Demostración Visual Multimedia</span>
+        </div>
+        <h2 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
+          La IA en Acción: <span class="gradient-text-cyan">Analizando y Limpiando Código</span>
+        </h2>
+        <p class="mt-4 text-gray-400 text-base sm:text-lg">
+          Observa el proceso autónomo de la AI Skill examinando estructuras de código, aislando anomalías y entregando código limpio en tiempo récord.
+        </p>
+      </div>
+
+      <!-- Video Player Card Container -->
+      <div class="max-w-5xl mx-auto relative">
+        <div class="absolute -inset-1.5 bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 rounded-3xl blur-xl opacity-30"></div>
+        <div class="relative glass-panel rounded-2xl overflow-hidden border border-gray-700/80 shadow-2xl">
+          
+          <!-- Mock Terminal / Video Header Bar -->
+          <div class="bg-gray-900/90 px-4 py-3 border-b border-gray-800 flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+              <div class="w-3 h-3 rounded-full bg-red-500/80"></div>
+              <div class="w-3 h-3 rounded-full bg-yellow-500/80"></div>
+              <div class="w-3 h-3 rounded-full bg-green-500/80"></div>
+              <span class="ml-2 font-mono text-xs text-gray-400">AI_analyzing_and_cleaning_code_20261008141921.mp4</span>
+            </div>
+            <div class="flex items-center space-x-2">
+              <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-mono font-medium bg-cyan-950 text-cyan-400 border border-cyan-800">
+                <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 mr-1.5 animate-pulse"></span>
+                HD VIDEO DEMO
+              </span>
+            </div>
+          </div>
+
+          <!-- Video Element with Controls and Fallbacks -->
+          <div class="relative bg-black flex items-center justify-center aspect-video group">
+            <video 
+              id="ai-demo-video"
+              class="w-full h-full object-contain"
+              controls
+              autoplay
+              muted
+              loop
+              playsinline
+              preload="metadata"
+            >
+              <source src="AI_analyzing_and_cleaning_code_20261008141921.mp4" type="video/mp4">
+              <source src="./AI_analyzing_and_cleaning_code_20261008141921.mp4" type="video/mp4">
+              Tu navegador no soporta la reproducción de video HTML5.
+            </video>
+          </div>
+
+          <!-- Video Bottom Info Cards -->
+          <div class="p-6 bg-gray-900/60 border-t border-gray-800 grid sm:grid-cols-3 gap-4 text-xs">
+            <div class="flex items-start space-x-3">
+              <div class="p-2 rounded-lg bg-cyan-500/10 text-cyan-400 shrink-0">
+                <i data-lucide="scan" class="w-4 h-4"></i>
+              </div>
+              <div>
+                <p class="font-semibold text-white">Escaneo Profundo</p>
+                <p class="text-gray-400 mt-0.5">Parseo de AST, complejidad ciclomática y estilo del lenguaje.</p>
+              </div>
+            </div>
+
+            <div class="flex items-start space-x-3">
+              <div class="p-2 rounded-lg bg-purple-500/10 text-purple-400 shrink-0">
+                <i data-lucide="cpu" class="w-4 h-4"></i>
+              </div>
+              <div>
+                <p class="font-semibold text-white">Detección de Patrones</p>
+                <p class="text-gray-400 mt-0.5">Diagnóstico de acoplamientos, fugas de memoria e inyecciones.</p>
+              </div>
+            </div>
+
+            <div class="flex items-start space-x-3">
+              <div class="p-2 rounded-lg bg-emerald-500/10 text-emerald-400 shrink-0">
+                <i data-lucide="sparkle" class="w-4 h-4"></i>
+              </div>
+              <div>
+                <p class="font-semibold text-white">Generación Clean Code</p>
+                <p class="text-gray-400 mt-0.5">Refactorización idiomática con type hints y documentación.</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Infografía Oficial Section (ChatGPT Image 8 oct 2026, 14_39_40.png) -->
+  <section id="infografia" class="py-20 relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="text-center max-w-3xl mx-auto mb-12">
+        <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-md bg-purple-950/60 border border-purple-500/30 text-purple-300 text-xs font-semibold uppercase tracking-wider mb-4">
+          <i data-lucide="layout" class="w-4 h-4"></i>
+          <span>Infografía Oficial del Proyecto</span>
+        </div>
+        <h2 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
+          Guía Visual: <span class="gradient-text-hero">Code Review y Clean Code</span>
+        </h2>
+        <p class="mt-4 text-gray-400 text-base sm:text-lg">
+          La infografía oficial que sintetiza los 4 pasos del asistente, los principios SOLID, la estructura estandarizada y las buenas prácticas esenciales.
+        </p>
+      </div>
+
+      <!-- Infographic Interactive Container -->
+      <div class="relative max-w-4xl mx-auto">
+        <div class="absolute -inset-1 bg-gradient-to-r from-purple-600 via-cyan-500 to-blue-600 rounded-3xl blur-xl opacity-30"></div>
+        <div class="relative glass-panel rounded-2xl p-4 sm:p-6 border border-gray-700 shadow-2xl text-center group">
+          
+          <div class="relative overflow-hidden rounded-xl bg-gray-950 border border-gray-800">
+            <!-- Infographic image with exact filename and fallback -->
+            <img 
+              id="infographic-img"
+              src="ChatGPT Image 8 oct 2026, 14_39_40.png" 
+              onerror="handleImgError(this)"
+              alt="Infografía Code Review y Clean Code" 
+              class="w-full h-auto max-h-[750px] object-contain mx-auto cursor-pointer transition-transform duration-500 group-hover:scale-[1.01]"
+              onclick="openLightbox()"
+            />
+
+            <!-- Hover overlay button -->
+            <div onclick="openLightbox()" class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center cursor-pointer p-4">
+              <span class="px-6 py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-purple-600 text-white font-bold text-sm flex items-center space-x-2 shadow-2xl backdrop-blur-md hover:scale-105 transition-transform">
+                <i data-lucide="maximize-2" class="w-5 h-5"></i>
+                <span>Ver Infografía en Pantalla Completa (Zoom)</span>
+              </span>
+              <span class="text-xs text-gray-300 mt-2">Haz clic para inspeccionar cada detalle en alta resolución</span>
+            </div>
+          </div>
+
+          <!-- Bottom Action Controls -->
+          <div class="mt-5 flex flex-col sm:flex-row items-center justify-between text-xs text-gray-400 gap-3 px-2">
+            <span class="flex items-center text-gray-300">
+              <i data-lucide="sparkles" class="w-4 h-4 text-cyan-400 mr-1.5"></i> 
+              Imagen de alta resolución original generada para la Skill
+            </span>
+            <div class="flex items-center space-x-2">
+              <button onclick="openLightbox()" class="px-4 py-2 rounded-lg bg-gray-800 hover:bg-gray-700 text-cyan-300 font-semibold transition flex items-center space-x-1.5 border border-gray-700">
+                <i data-lucide="zoom-in" class="w-4 h-4"></i>
+                <span>Abrir Visor Zoom</span>
+              </button>
+              <a href="ChatGPT Image 8 oct 2026, 14_39_40.png" download="infografia_code_review_clean_code.png" class="px-4 py-2 rounded-lg bg-cyan-950 hover:bg-cyan-900 text-cyan-300 font-semibold transition flex items-center space-x-1.5 border border-cyan-800">
+                <i data-lucide="download" class="w-4 h-4"></i>
+                <span>Descargar PNG</span>
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ¿Cómo Funciona? (Los 4 Pasos de la Infografía) -->
+  <section id="como-funciona" class="py-20 relative bg-gray-950/60 border-y border-gray-800/80">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="text-center max-w-3xl mx-auto mb-16">
+        <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-md bg-cyan-950/60 border border-cyan-500/30 text-cyan-300 text-xs font-semibold uppercase tracking-wider mb-4">
+          <i data-lucide="workflow" class="w-4 h-4"></i>
+          <span>Metodología en 4 Pasos</span>
+        </div>
+        <h2 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
+          ¿Cómo funciona la revisión?
+        </h2>
+        <p class="mt-4 text-gray-400 text-base sm:text-lg">
+          El ciclo estandarizado de cuatro fases que ejecuta la skill sobre cualquier fragmento o Pull Request.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 relative">
+        
+        <!-- Step 1 -->
+        <div class="glass-panel p-6 rounded-2xl relative flex flex-col justify-between border-t-2 border-t-cyan-400 hover:border-cyan-400 transition-all">
+          <div>
+            <div class="w-12 h-12 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center font-black text-xl mb-4 border border-cyan-500/30">
+              1
+            </div>
+            <h3 class="text-lg font-bold text-white mb-2">Análisis Estructural y de Legibilidad</h3>
+            <ul class="text-xs text-gray-400 space-y-2 mt-3">
+              <li class="flex items-start gap-2">
+                <i data-lucide="check" class="w-3.5 h-3.5 text-cyan-400 shrink-0 mt-0.5"></i>
+                <span>Nombres descriptivos de variables, funciones y clases acordes al dominio.</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <i data-lucide="check" class="w-3.5 h-3.5 text-cyan-400 shrink-0 mt-0.5"></i>
+                <span>Complejidad ciclomática (funciones extensas o excesivamente anidadas).</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <i data-lucide="check" class="w-3.5 h-3.5 text-cyan-400 shrink-0 mt-0.5"></i>
+                <span>Convenciones de estilo del lenguaje (PEP8, TypeScript, Google Style Guide).</span>
+              </li>
+            </ul>
+          </div>
+          <div class="mt-6 pt-3 border-t border-gray-800 text-[11px] font-mono text-cyan-400">
+            Fase: Lexical & Cognitive Load
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="glass-panel p-6 rounded-2xl relative flex flex-col justify-between border-t-2 border-t-purple-400 hover:border-purple-400 transition-all">
+          <div>
+            <div class="w-12 h-12 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center font-black text-xl mb-4 border border-purple-500/30">
+              2
+            </div>
+            <h3 class="text-lg font-bold text-white mb-2">Principios SOLID y Patrones de Diseño</h3>
+            <ul class="text-xs text-gray-400 space-y-2 mt-3">
+              <li class="flex items-start gap-2">
+                <i data-lucide="check" class="w-3.5 h-3.5 text-purple-400 shrink-0 mt-0.5"></i>
+                <span>Evaluación de los 5 principios SOLID (SRP, OCP, LSP, ISP, DIP).</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <i data-lucide="check" class="w-3.5 h-3.5 text-purple-400 shrink-0 mt-0.5"></i>
+                <span>Detección de clases que asumen responsabilidades múltiples.</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <i data-lucide="check" class="w-3.5 h-3.5 text-purple-400 shrink-0 mt-0.5"></i>
+                <span>Sugerencia de patrones idóneos (Factory, Strategy, Observer, Repository).</span>
+              </li>
+            </ul>
+          </div>
+          <div class="mt-6 pt-3 border-t border-gray-800 text-[11px] font-mono text-purple-400">
+            Fase: Software Architecture
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="glass-panel p-6 rounded-2xl relative flex flex-col justify-between border-t-2 border-t-blue-400 hover:border-blue-400 transition-all">
+          <div>
+            <div class="w-12 h-12 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center font-black text-xl mb-4 border border-blue-500/30">
+              3
+            </div>
+            <h3 class="text-lg font-bold text-white mb-2">Seguridad OWASP y Rendimiento</h3>
+            <ul class="text-xs text-gray-400 space-y-2 mt-3">
+              <li class="flex items-start gap-2">
+                <i data-lucide="check" class="w-3.5 h-3.5 text-blue-400 shrink-0 mt-0.5"></i>
+                <span>Detección de vulnerabilidades (inyecciones SQL/Command, XSS, inputs inseguros).</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <i data-lucide="check" class="w-3.5 h-3.5 text-blue-400 shrink-0 mt-0.5"></i>
+                <span>Exposición de credenciales, secretos hardcodeados o tokens.</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <i data-lucide="check" class="w-3.5 h-3.5 text-blue-400 shrink-0 mt-0.5"></i>
+                <span>Eficiencia algorítmica: optimización de $O(n^2)$ a $O(n)$ o $O(1)$.</span>
+              </li>
+            </ul>
+          </div>
+          <div class="mt-6 pt-3 border-t border-gray-800 text-[11px] font-mono text-blue-400">
+            Fase: Security & Complexity
+          </div>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="glass-panel p-6 rounded-2xl relative flex flex-col justify-between border-t-2 border-t-emerald-400 hover:border-emerald-400 transition-all">
+          <div>
+            <div class="w-12 h-12 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-black text-xl mb-4 border border-emerald-500/30">
+              4
+            </div>
+            <h3 class="text-lg font-bold text-white mb-2">Estructura de Respuesta Estandarizada</h3>
+            <ul class="text-xs text-gray-400 space-y-2 mt-3">
+              <li class="flex items-start gap-2">
+                <i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5"></i>
+                <span><strong>1. Resumen General:</strong> Puntuación de calidad (0 a 100).</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5"></i>
+                <span><strong>2. Puntos Críticos:</strong> Lista detallada de Code Smells.</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5"></i>
+                <span><strong>3. Refactorización:</strong> Código corregido y tipado listo.</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5"></i>
+                <span><strong>4. Buenas Prácticas:</strong> Consejos de escala y testing.</span>
+              </li>
+            </ul>
+          </div>
+          <div class="mt-6 pt-3 border-t border-gray-800 text-[11px] font-mono text-emerald-400">
+            Fase: Production-Ready Delivery
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Principios SOLID (Interactive Deep Dive) -->
+  <section id="solid" class="py-20 relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="text-center max-w-3xl mx-auto mb-16">
+        <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-md bg-indigo-950/60 border border-indigo-500/30 text-indigo-300 text-xs font-semibold uppercase tracking-wider mb-4">
+          <i data-lucide="boxes" class="w-4 h-4"></i>
+          <span>Arquitectura de Software Orientada a Objetos</span>
+        </div>
+        <h2 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
+          Los 5 Principios <span class="gradient-text-hero">SOLID</span> Evaluados
+        </h2>
+        <p class="mt-4 text-gray-400 text-base sm:text-lg">
+          La skill valida cuantitativa y cualitativamente cada regla para garantizar software mantenible a largo plazo.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-5 gap-4">
+        
+        <!-- S -->
+        <div class="glass-card p-5 rounded-2xl flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <span class="w-10 h-10 rounded-xl bg-cyan-500/20 text-cyan-400 border border-cyan-500/40 flex items-center justify-center font-bold text-xl">S</span>
+              <span class="text-[10px] font-mono text-cyan-300 uppercase">Principle 1</span>
+            </div>
+            <h3 class="font-bold text-white text-base">Single Responsibility</h3>
+            <p class="text-xs text-gray-400 mt-2">
+              Una clase o función debe tener <strong>una sola razón para cambiar</strong>. Evita "God Classes" que gestionan persistencia, UI y validación a la vez.
+            </p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-gray-800/80 text-[11px] text-cyan-400 font-mono">
+            ✔ Alta Cohesión
+          </div>
+        </div>
+
+        <!-- O -->
+        <div class="glass-card p-5 rounded-2xl flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <span class="w-10 h-10 rounded-xl bg-purple-500/20 text-purple-400 border border-purple-500/40 flex items-center justify-center font-bold text-xl">O</span>
+              <span class="text-[10px] font-mono text-purple-300 uppercase">Principle 2</span>
+            </div>
+            <h3 class="font-bold text-white text-base">Open / Closed</h3>
+            <p class="text-xs text-gray-400 mt-2">
+              Abierto a la <strong>extensión</strong>, cerrado a la <strong>modificación</strong>. Permite agregar nuevas features sin tocar el código probado existente.
+            </p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-gray-800/80 text-[11px] text-purple-400 font-mono">
+            ✔ Polimorfismo
+          </div>
+        </div>
+
+        <!-- L -->
+        <div class="glass-card p-5 rounded-2xl flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <span class="w-10 h-10 rounded-xl bg-blue-500/20 text-blue-400 border border-blue-500/40 flex items-center justify-center font-bold text-xl">L</span>
+              <span class="text-[10px] font-mono text-blue-300 uppercase">Principle 3</span>
+            </div>
+            <h3 class="font-bold text-white text-base">Liskov Substitution</h3>
+            <p class="text-xs text-gray-400 mt-2">
+              Las subclases deben poder <strong>sustituir</strong> a sus clases base sin romper el comportamiento esperado ni lanzar excepciones imprevistas.
+            </p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-gray-800/80 text-[11px] text-blue-400 font-mono">
+            ✔ Subtipado Real
+          </div>
+        </div>
+
+        <!-- I -->
+        <div class="glass-card p-5 rounded-2xl flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <span class="w-10 h-10 rounded-xl bg-pink-500/20 text-pink-400 border border-pink-500/40 flex items-center justify-center font-bold text-xl">I</span>
+              <span class="text-[10px] font-mono text-pink-300 uppercase">Principle 4</span>
+            </div>
+            <h3 class="font-bold text-white text-base">Interface Segregation</h3>
+            <p class="text-xs text-gray-400 mt-2">
+              Ningún cliente debe verse obligado a depender de métodos que no utiliza. Prefiere <strong>múltiples interfaces específicas</strong> a una sola gigante.
+            </p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-gray-800/80 text-[11px] text-pink-400 font-mono">
+            ✔ Interfaces Claras
+          </div>
+        </div>
+
+        <!-- D -->
+        <div class="glass-card p-5 rounded-2xl flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <span class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 flex items-center justify-center font-bold text-xl">D</span>
+              <span class="text-[10px] font-mono text-emerald-300 uppercase">Principle 5</span>
+            </div>
+            <h3 class="font-bold text-white text-base">Dependency Inversion</h3>
+            <p class="text-xs text-gray-400 mt-2">
+              Depende de <strong>abstracciones</strong>, no de concreciones. Promueve inyección de dependencias (DI) para desacoplar componentes y facilitar tests unitarios.
+            </p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-gray-800/80 text-[11px] text-emerald-400 font-mono">
+            ✔ Desacoplamiento
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Simulador Interactivo de Auditoría (Playground) -->
+  <section id="simulador" class="py-20 relative bg-gray-950/80 border-y border-gray-800/80">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="text-center max-w-3xl mx-auto mb-12">
+        <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-md bg-cyan-950/60 border border-cyan-500/30 text-cyan-300 text-xs font-semibold uppercase tracking-wider mb-4">
+          <i data-lucide="terminal" class="w-4 h-4"></i>
+          <span>Playground Interactivo en Tiempo Real</span>
+        </div>
+        <h2 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
+          Simulador de la Skill <span class="gradient-text-cyan">Code Review IA</span>
+        </h2>
+        <p class="mt-4 text-gray-400 text-base sm:text-lg">
+          Selecciona un fragmento de código de prueba o pega el tuyo para experimentar la auditoría senior en acción.
+        </p>
+      </div>
+
+      <!-- Simulator Card -->
+      <div class="max-w-5xl mx-auto glass-panel rounded-3xl p-6 sm:p-8 border border-gray-700/80 shadow-2xl relative">
+        
+        <!-- Preset Examples Selector Buttons -->
+        <div class="flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-gray-800">
+          <div class="flex items-center space-x-2 text-xs font-medium text-gray-400">
+            <span>Cargar ejemplo predeterminado:</span>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <button onclick="loadSnippet('python')" id="btn-snippet-python" class="px-3.5 py-1.5 rounded-lg text-xs font-mono font-medium transition bg-cyan-500/20 text-cyan-300 border border-cyan-500/50">
+              🐍 Python (usuario.py)
+            </button>
+            <button onclick="loadSnippet('typescript')" id="btn-snippet-typescript" class="px-3.5 py-1.5 rounded-lg text-xs font-mono font-medium transition bg-gray-900 text-gray-400 border border-gray-800 hover:text-white">
+              📘 TypeScript (Auth & SQL)
+            </button>
+            <button onclick="loadSnippet('solid')" id="btn-snippet-solid" class="px-3.5 py-1.5 rounded-lg text-xs font-mono font-medium transition bg-gray-900 text-gray-400 border border-gray-800 hover:text-white">
+              🧱 Java / OOP (Violación SRP)
+            </button>
+          </div>
+        </div>
+
+        <!-- Editor and Execution Area -->
+        <div class="mt-6">
+          <div class="flex items-center justify-between mb-2">
+            <label for="code-input" class="text-xs font-mono text-gray-300 flex items-center gap-1.5">
+              <i data-lucide="code" class="w-4 h-4 text-cyan-400"></i>
+              <span>Código fuente a auditar:</span>
+            </label>
+            <span id="current-lang-tag" class="text-[11px] font-mono text-cyan-400 bg-cyan-950/60 px-2 py-0.5 rounded border border-cyan-800">
+              Lenguaje: Python 3
+            </span>
+          </div>
+
+          <div class="relative rounded-2xl overflow-hidden border border-gray-800 bg-[#090d16]">
+            <textarea 
+              id="code-input"
+              rows="7"
+              class="w-full p-4 bg-transparent font-mono text-xs sm:text-sm text-cyan-200 focus:outline-none focus:ring-1 focus:ring-cyan-500 leading-relaxed resize-none"
+              placeholder="// Pega tu código aquí..."
+            >def obtener_datos(usuario):
+    datos = []
+    for u in usuario:
+        datos.append({"id": u["id"], "nombre": u["nombre"]})
+    return datos</textarea>
+          </div>
+        </div>
+
+        <!-- Run Audit Button & Status Indicator -->
+        <div class="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div class="flex items-center space-x-3 w-full sm:w-auto">
+            <button 
+              id="run-audit-btn" 
+              onclick="triggerAuditSimulation()"
+              class="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 text-white font-bold text-sm shadow-xl shadow-cyan-500/25 hover:shadow-cyan-500/40 hover:scale-[1.02] transition-all flex items-center justify-center space-x-2"
+            >
+              <i data-lucide="play" class="w-4 h-4"></i>
+              <span>Ejecutar Auditoría con IA</span>
+            </button>
+            <button 
+              onclick="resetSimulator()" 
+              class="px-4 py-3.5 rounded-xl bg-gray-900 hover:bg-gray-800 text-gray-400 hover:text-white border border-gray-800 transition text-sm flex items-center"
+              title="Restablecer"
+            >
+              <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+            </button>
+          </div>
+
+          <div id="audit-progress-container" class="hidden flex items-center space-x-3 text-xs text-cyan-300 font-mono">
+            <span class="w-3 h-3 rounded-full bg-cyan-400 animate-ping"></span>
+            <span id="audit-step-label">Analizando sintaxis y estructura...</span>
+          </div>
+        </div>
+
+        <!-- Live Results Box (Standardized 4-Part Structure) -->
+        <div id="audit-result-card" class="mt-8 pt-8 border-t border-gray-800">
+          
+          <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+            <div class="flex items-center space-x-3">
+              <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold">
+                <i data-lucide="shield-check" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <h3 class="text-base font-bold text-white">Informe Oficial de la Skill</h3>
+                <p class="text-xs text-gray-400">Formato estandarizado en 4 secciones</p>
+              </div>
+            </div>
+
+            <!-- Clean Score Badge -->
+            <div class="flex items-center space-x-3">
+              <div class="text-right">
+                <p class="text-[11px] text-gray-400 font-mono">Clean Code Score</p>
+                <p id="score-text" class="text-xl font-black text-emerald-400 font-mono">98 / 100</p>
+              </div>
+              <div class="px-3 py-1.5 rounded-lg bg-emerald-950/70 border border-emerald-600/50 text-emerald-300 font-mono text-xs font-semibold">
+                APROBADO
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 1 & 2 -->
+          <div class="grid md:grid-cols-2 gap-6 mb-6">
+            
+            <!-- 1. Resumen General -->
+            <div class="bg-gray-950/70 rounded-2xl p-5 border border-gray-800/80">
+              <div class="flex items-center space-x-2 text-cyan-400 font-bold text-xs uppercase tracking-wider mb-3">
+                <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
+                <span>1. 📊 Resumen General</span>
+              </div>
+              <p id="result-summary" class="text-xs text-gray-300 leading-relaxed">
+                El código cumple con la lógica de negocio pero presenta oportunidades clave de mejora en nomenclatura, ausencia de anotaciones de tipos estáticos y uso de bucles imperativos ineficientes.
+              </p>
+              <div class="mt-4 flex items-center gap-2 text-[11px] font-mono text-gray-400">
+                <span class="px-2 py-0.5 rounded bg-gray-900 border border-gray-800 text-cyan-300">Tiempo: 0.38s</span>
+                <span class="px-2 py-0.5 rounded bg-gray-900 border border-gray-800 text-purple-300">Tokens: 342</span>
+              </div>
+            </div>
+
+            <!-- 2. Puntos Críticos & Code Smells -->
+            <div class="bg-gray-950/70 rounded-2xl p-5 border border-gray-800/80">
+              <div class="flex items-center space-x-2 text-red-400 font-bold text-xs uppercase tracking-wider mb-3">
+                <i data-lucide="alert-octagon" class="w-4 h-4"></i>
+                <span>2. ⚠️ Puntos Críticos & Code Smells</span>
+              </div>
+              <ul id="result-smells" class="space-y-2 text-xs text-gray-300">
+                <li class="flex items-start space-x-2 text-red-300/90">
+                  <i data-lucide="x-circle" class="w-3.5 h-3.5 text-red-400 shrink-0 mt-0.5"></i>
+                  <span><strong>Nombre ambiguo:</strong> Variable `usuario` en singular para una lista de usuarios.</span>
+                </li>
+                <li class="flex items-start space-x-2 text-amber-300/90">
+                  <i data-lucide="alert-triangle" class="w-3.5 h-3.5 text-amber-400 shrink-0 mt-0.5"></i>
+                  <span><strong>Tipado ausente:</strong> Falta de Type Hints en parámetros y retorno de función.</span>
+                </li>
+                <li class="flex items-start space-x-2 text-blue-300/90">
+                  <i data-lucide="info" class="w-3.5 h-3.5 text-blue-400 shrink-0 mt-0.5"></i>
+                  <span><strong>Imperativo innecesario:</strong> `for ... append` reemplazable por list comprehension idiomático.</span>
+                </li>
+              </ul>
+            </div>
+
+          </div>
+
+          <!-- Section 3: Propuesta de Mejora (Refactor) -->
+          <div class="bg-gray-950/80 rounded-2xl border border-emerald-500/30 overflow-hidden mb-6 shadow-xl">
+            <div class="bg-emerald-950/30 px-5 py-3 border-b border-emerald-500/20 flex items-center justify-between">
+              <div class="flex items-center space-x-2">
+                <i data-lucide="sparkles" class="w-4 h-4 text-emerald-400"></i>
+                <span class="text-xs font-bold text-emerald-300 uppercase tracking-wider">3. ✨ Propuesta de Mejora / Refactorización</span>
+              </div>
+              <button onclick="copyRefactoredCode()" class="px-3 py-1 rounded bg-emerald-900/40 hover:bg-emerald-800/60 text-emerald-300 border border-emerald-700/50 text-xs font-mono flex items-center space-x-1.5 transition">
+                <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                <span>Copiar Código</span>
+              </button>
+            </div>
+            <div class="p-4 sm:p-5 overflow-x-auto bg-[#070b12]">
+              <pre class="font-mono text-xs sm:text-sm text-gray-200 leading-relaxed"><code id="result-code"><span class="text-emerald-400"># usuario.py (Refactorizado con Clean Code & Type Hints)</span>
+<span class="text-purple-400">def</span> <span class="text-blue-400">obtener_datos</span>(usuarios: <span class="text-yellow-300">list</span>[<span class="text-yellow-300">dict</span>]) -> <span class="text-yellow-300">list</span>[<span class="text-yellow-300">dict</span>]:
+    <span class="text-gray-400">"""Obtiene y filtra los datos esenciales de una lista de usuarios.
+    
+    Aplica compresión de listas para optimizar la ejecución O(N).
+    """</span>
+    <span class="text-purple-400">return</span> [
+        {<span class="text-emerald-300">"id"</span>: u[<span class="text-emerald-300">"id"</span>], <span class="text-emerald-300">"nombre"</span>: u[<span class="text-emerald-300">"nombre"</span>]} 
+        <span class="text-purple-400">for</span> u <span class="text-purple-400">in</span> usuarios
+    ]</code></pre>
+            </div>
+          </div>
+
+          <!-- Section 4: Buenas Prácticas Adicionales -->
+          <div class="bg-gray-950/70 rounded-2xl p-5 border border-gray-800/80">
+            <div class="flex items-center space-x-2 text-purple-400 font-bold text-xs uppercase tracking-wider mb-3">
+              <i data-lucide="lightbulb" class="w-4 h-4"></i>
+              <span>4. 💡 Buenas Prácticas Adicionales Recomendadas</span>
+            </div>
+            <div id="result-practices" class="grid sm:grid-cols-2 gap-3 text-xs text-gray-300">
+              <div class="p-3 rounded-xl bg-gray-900/60 border border-gray-800">
+                <p class="font-semibold text-white">Validación con Pydantic / Dataclasses</p>
+                <p class="text-gray-400 mt-1">Si los diccionarios de usuario provienen de una API externa, define un esquema formal tipado.</p>
+              </div>
+              <div class="p-3 rounded-xl bg-gray-900/60 border border-gray-800">
+                <p class="font-semibold text-white">Cobertura de Pruebas Unitarias</p>
+                <p class="text-gray-400 mt-1">Implementa tests con `pytest` para verificar listas vacías y claves ausentes (KeyError).</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Comparativa Antes vs Después (Split Code Diff Viewer) -->
+  <section id="ejemplo-diff" class="py-20 relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="text-center max-w-3xl mx-auto mb-14">
+        <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-md bg-blue-950/60 border border-blue-500/30 text-blue-300 text-xs font-semibold uppercase tracking-wider mb-4">
+          <i data-lucide="git-compare" class="w-4 h-4"></i>
+          <span>Demostración de Refactorización</span>
+        </div>
+        <h2 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
+          Comparativa Visual: <span class="text-red-400">Antes</span> vs <span class="text-emerald-400">Después</span>
+        </h2>
+        <p class="mt-4 text-gray-400 text-base sm:text-lg">
+          Observa la transformación directa del fragmento de ejemplo incluido en el README y la Infografía.
+        </p>
+      </div>
+
+      <div class="grid lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
+        
+        <!-- Antes -->
+        <div class="rounded-2xl border border-red-900/60 bg-gray-900/90 overflow-hidden shadow-2xl flex flex-col justify-between">
+          <div>
+            <div class="bg-red-950/50 px-5 py-3 border-b border-red-900/60 flex items-center justify-between">
+              <div class="flex items-center space-x-2">
+                <i data-lucide="x-circle" class="w-4 h-4 text-red-400"></i>
+                <span class="font-mono text-sm font-semibold text-red-200">usuario.py (Antes — Problemático)</span>
+              </div>
+              <span class="text-xs px-2.5 py-0.5 rounded bg-red-900/50 text-red-300 font-mono">4 Hallazgos</span>
+            </div>
+            
+            <div class="p-5 overflow-x-auto bg-[#0a0709]">
+              <pre class="font-mono text-xs sm:text-sm text-gray-300 leading-relaxed"><code><span class="text-red-400"># Problemas: Falta de tipos, mala convención de nombre y bucle lento</span>
+<span class="text-purple-400">def</span> <span class="text-blue-400">obtener_datos</span>(usuario):
+    datos = []
+    <span class="text-purple-400">for</span> u <span class="text-purple-400">in</span> usuario:
+        datos.append({<span class="text-emerald-300">"id"</span>: u[<span class="text-emerald-300">"id"</span>], <span class="text-emerald-300">"nombre"</span>: u[<span class="text-emerald-300">"nombre"</span>]})
+    <span class="text-purple-400">return</span> datos</code></pre>
+            </div>
+          </div>
+
+          <div class="p-4 bg-red-950/20 border-t border-red-900/40 text-xs text-red-300/90 space-y-2">
+            <div class="flex items-center gap-2">
+              <i data-lucide="x" class="w-4 h-4 text-red-400 shrink-0"></i>
+              <span>Variable `usuario` en singular cuando representa una lista iterable.</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <i data-lucide="x" class="w-4 h-4 text-red-400 shrink-0"></i>
+              <span>Sin anotaciones de tipos para detección estática (Mypy / IDE).</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <i data-lucide="x" class="w-4 h-4 text-red-400 shrink-0"></i>
+              <span>Construcción imperativa innecesaria con `append()` en bucle.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Después -->
+        <div class="rounded-2xl border border-emerald-800/60 bg-gray-900/90 overflow-hidden shadow-2xl flex flex-col justify-between">
+          <div>
+            <div class="bg-emerald-950/50 px-5 py-3 border-b border-emerald-900/60 flex items-center justify-between">
+              <div class="flex items-center space-x-2">
+                <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400"></i>
+                <span class="font-mono text-sm font-semibold text-emerald-200">usuario.py (Después — Refactorizado)</span>
+              </div>
+              <span class="text-xs px-2.5 py-0.5 rounded bg-emerald-900/50 text-emerald-300 font-mono">100% Clean</span>
+            </div>
+
+            <div class="p-5 overflow-x-auto bg-[#070b09]">
+              <pre class="font-mono text-xs sm:text-sm text-gray-300 leading-relaxed"><code><span class="text-emerald-400"># Solución: Comprensión idiomática, tipado estricto y docstring</span>
+<span class="text-purple-400">def</span> <span class="text-blue-400">obtener_datos</span>(usuarios: <span class="text-yellow-300">list</span>[<span class="text-yellow-300">dict</span>]) -> <span class="text-yellow-300">list</span>[<span class="text-yellow-300">dict</span>]:
+    <span class="text-purple-400">return</span> [
+        {<span class="text-emerald-300">"id"</span>: u[<span class="text-emerald-300">"id"</span>], <span class="text-emerald-300">"nombre"</span>: u[<span class="text-emerald-300">"nombre"</span>]} 
+        <span class="text-purple-400">for</span> u <span class="text-purple-400">in</span> usuarios
+    ]</code></pre>
+            </div>
+          </div>
+
+          <div class="p-4 bg-emerald-950/20 border-t border-emerald-900/40 text-xs text-emerald-300/90 space-y-2">
+            <div class="flex items-center gap-2">
+              <i data-lucide="check" class="w-4 h-4 text-emerald-400 shrink-0"></i>
+              <span>Nombre claro `usuarios` que define la colección exacta.</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <i data-lucide="check" class="w-4 h-4 text-emerald-400 shrink-0"></i>
+              <span>Tipado estricto `list[dict]` según especificaciones modernas de Python.</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <i data-lucide="check" class="w-4 h-4 text-emerald-400 shrink-0"></i>
+              <span>List comprehension conciso y ejecución en bytecode optimizada $O(n)$.</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SECCIÓN README COMPLETA (Requisito clave: "que contenga readme") -->
+  <section id="readme" class="py-20 relative bg-[#070b14] border-t border-gray-800">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- Section Header -->
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+        <div>
+          <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-md bg-blue-950/60 border border-blue-500/30 text-blue-300 text-xs font-semibold uppercase tracking-wider mb-3">
+            <i data-lucide="book-open" class="w-4 h-4"></i>
+            <span>Documentación Oficial del Repositorio</span>
+          </div>
+          <h2 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
+            README.md <span class="gradient-text-cyan">Completo</span>
+          </h2>
+          <p class="text-gray-400 text-sm sm:text-base mt-2">
+            Visualización interactiva, renderizada y descargable de la documentación técnica completa del proyecto.
+          </p>
+        </div>
+
+        <!-- Controls: Raw vs Rendered, Copy, Download -->
+        <div class="flex flex-wrap items-center gap-2">
+          <button onclick="toggleReadmeView('rendered')" id="tab-readme-rendered" class="px-4 py-2 rounded-xl text-xs font-medium transition bg-cyan-500 text-white shadow-md shadow-cyan-500/20">
+            Vista Renderizada
+          </button>
+          <button onclick="toggleReadmeView('raw')" id="tab-readme-raw" class="px-4 py-2 rounded-xl text-xs font-medium transition bg-gray-900 text-gray-300 border border-gray-800 hover:text-white">
+            Markdown Raw
+          </button>
+          <button onclick="copyReadmeMarkdown()" class="px-4 py-2 rounded-xl text-xs font-medium transition bg-gray-900 text-cyan-300 border border-cyan-800/60 hover:bg-gray-800 flex items-center space-x-1.5">
+            <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+            <span>Copiar README</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- README Container Card -->
+      <div class="glass-panel rounded-3xl border border-gray-800 overflow-hidden shadow-2xl">
+        
+        <!-- Document Title Bar -->
+        <div class="bg-gray-900/90 px-6 py-4 border-b border-gray-800 flex items-center justify-between">
+          <div class="flex items-center space-x-3">
+            <i data-lucide="file-code" class="w-5 h-5 text-cyan-400"></i>
+            <span class="font-mono text-xs sm:text-sm text-gray-200 font-semibold">README.md</span>
+            <span class="text-xs text-gray-500 hidden sm:inline">• 151 líneas • 6.5 KB</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <a href="README.md" download="README.md" class="text-xs text-cyan-400 hover:text-cyan-300 flex items-center gap-1 font-mono">
+              <i data-lucide="download" class="w-3.5 h-3.5"></i>
+              <span>Descargar</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Rendered Markdown View -->
+        <div id="readme-rendered-content" class="p-6 sm:p-10 space-y-8 text-gray-300 text-sm leading-relaxed">
+          
+          <!-- Shields & Header -->
+          <div class="space-y-4 border-b border-gray-800/80 pb-6">
+            <h1 class="text-2xl sm:text-4xl font-extrabold text-white flex items-center gap-2">
+              🚀 Code Review & Clean Code - AI Skill
+            </h1>
+            <div class="flex flex-wrap gap-2 pt-2">
+              <span class="inline-flex items-center px-3 py-1 rounded bg-[#06b6d4] text-white font-mono text-xs font-semibold">
+                AI Skill: Code Review & Clean Code
+              </span>
+              <span class="inline-flex items-center px-3 py-1 rounded bg-[#10b981] text-white font-mono text-xs font-semibold">
+                Status: Active & Production Ready
+              </span>
+              <span class="inline-flex items-center px-3 py-1 rounded bg-[#8b5cf6] text-white font-mono text-xs font-semibold">
+                License: MIT
+              </span>
+            </div>
+          </div>
+
+          <!-- 📌 Descripción General -->
+          <div class="space-y-3">
+            <h2 class="text-xl font-bold text-white flex items-center gap-2 border-b border-gray-800 pb-2">
+              📌 Descripción General
+            </h2>
+            <p>
+              <strong class="text-cyan-300">Code Review & Clean Code</strong> es una habilidad de inteligencia artificial (<em>AI Skill</em>) diseñada para actuar como un <strong class="text-white">Software Engineer Senior</strong> y auditor de código automatizado.
+            </p>
+            <p>
+              Su principal valor es analizar fragmentos de código, funciones o módulos completos en cualquier lenguaje de programación, detectando instantáneamente <strong class="text-red-300">malas prácticas</strong>, <strong class="text-amber-300">code smells</strong>, <strong class="text-emerald-300">vulnerabilidades de seguridad</strong> e <strong class="text-blue-300">ineficiencias de rendimiento</strong>, ofreciendo a su vez una versión refactorizada lista para producción.
+            </p>
+          </div>
+
+          <!-- 🎯 Objetivo -->
+          <div class="space-y-3">
+            <h2 class="text-xl font-bold text-white flex items-center gap-2 border-b border-gray-800 pb-2">
+              🎯 Objetivo
+            </h2>
+            <p>
+              Garantizar que todo código desarrollado mantenga los estándares más altos de <strong class="text-white">mantenibilidad, legibilidad, seguridad y eficiencia</strong>, permitiendo a desarrolladores y equipos acelerar sus revisiones de código (<em>Code Reviews</em>) sin sacrificar la calidad arquitectónica del software.
+            </p>
+          </div>
+
+          <!-- ✨ Funcionalidades Principales -->
+          <div class="space-y-3">
+            <h2 class="text-xl font-bold text-white flex items-center gap-2 border-b border-gray-800 pb-2">
+              ✨ Funcionalidades Principales
+            </h2>
+            <div class="grid sm:grid-cols-2 gap-3 text-xs">
+              <div class="p-3.5 rounded-xl bg-gray-900/70 border border-gray-800">
+                <span class="font-bold text-cyan-400 block mb-1">🔍 Análisis Estructural y Legibilidad</span>
+                <span>Revisa convenciones de estilo (PEP8, TypeScript style guide, Clean Code), nombres descriptivos de variables/métodos y anidamientos.</span>
+              </div>
+              <div class="p-3.5 rounded-xl bg-gray-900/70 border border-gray-800">
+                <span class="font-bold text-purple-400 block mb-1">🧩 Verificación de Principios SOLID</span>
+                <span>Evalúa si las clases o componentes cumplen con diseño orientado a objetos y modularidad desacoplada.</span>
+              </div>
+              <div class="p-3.5 rounded-xl bg-gray-900/70 border border-gray-800">
+                <span class="font-bold text-blue-400 block mb-1">🎨 Sugerencia de Patrones de Diseño</span>
+                <span>Identifica oportunidades para aplicar patrones como Strategy, Factory, Observer, Adapter o Repository.</span>
+              </div>
+              <div class="p-3.5 rounded-xl bg-gray-900/70 border border-gray-800">
+                <span class="font-bold text-emerald-400 block mb-1">🛡️ Auditoría de Seguridad (OWASP Top 10)</span>
+                <span>Detecta inyecciones SQL/Command, falta de saneamiento de inputs, exposición de secretos y manejo inseguro de excepciones.</span>
+              </div>
+              <div class="p-3.5 rounded-xl bg-gray-900/70 border border-gray-800">
+                <span class="font-bold text-yellow-400 block mb-1">⚡ Optimización Algorítmica y Rendimiento</span>
+                <span>Analiza complejidad temporal O(n) y espacial O(1), cuellos de botella en bucles y uso de memoria.</span>
+              </div>
+              <div class="p-3.5 rounded-xl bg-gray-900/70 border border-gray-800">
+                <span class="font-bold text-pink-400 block mb-1">🛠️ Refactorización Completa</span>
+                <span>Entrega el código corregido, tipado y comentado, preservando la lógica de negocio intacta.</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 🕒 ¿Cuándo utilizar la Skill? -->
+          <div class="space-y-3">
+            <h2 class="text-xl font-bold text-white flex items-center gap-2 border-b border-gray-800 pb-2">
+              🕒 ¿Cuándo utilizar la Skill?
+            </h2>
+            <ol class="list-decimal list-inside space-y-2 text-xs sm:text-sm text-gray-300">
+              <li><strong class="text-white">Antes de abrir un Pull Request (PR):</strong> Para realizar un pre-audit personal y corregir observaciones antes de la revisión por pares.</li>
+              <li><strong class="text-white">Durante sesiones de Refactorización:</strong> Al trabajar con código legado (<em>legacy code</em>) desordenado o difícil de mantener.</li>
+              <li><strong class="text-white">Al detectar problemas de rendimiento:</strong> Cuando un módulo consume excesivos recursos de CPU o memoria.</li>
+              <li><strong class="text-white">Como herramienta de aprendizaje:</strong> Para desarrolladores Juniors/Intermedios que desean entender el porqué de una mala práctica y cómo solucionarla.</li>
+            </ol>
+          </div>
+
+          <!-- 📐 Principios SOLID Analizados -->
+          <div class="space-y-3">
+            <h2 class="text-xl font-bold text-white flex items-center gap-2 border-b border-gray-800 pb-2">
+              📐 Principios SOLID Analizados
+            </h2>
+            <ul class="space-y-2 text-xs sm:text-sm">
+              <li class="p-2.5 rounded bg-gray-900/60 border border-gray-800">
+                <strong class="text-cyan-400">1. S - Single Responsibility Principle (SRP):</strong> Garantiza que cada clase/función tenga una sola razón para cambiar.
+              </li>
+              <li class="p-2.5 rounded bg-gray-900/60 border border-gray-800">
+                <strong class="text-purple-400">2. O - Open/Closed Principle (OCP):</strong> Asegura que las entidades estén abiertas a la extensión pero cerradas a la modificación.
+              </li>
+              <li class="p-2.5 rounded bg-gray-900/60 border border-gray-800">
+                <strong class="text-blue-400">3. L - Liskov Substitution Principle (LSP):</strong> Verifica que las subclases puedan sustituir a sus clases base sin romper la aplicación.
+              </li>
+              <li class="p-2.5 rounded bg-gray-900/60 border border-gray-800">
+                <strong class="text-pink-400">4. I - Interface Segregation Principle (ISP):</strong> Evita interfaces infladas forzando contratos específicos y pequeños.
+              </li>
+              <li class="p-2.5 rounded bg-gray-900/60 border border-gray-800">
+                <strong class="text-emerald-400">5. D - Dependency Inversion Principle (DIP):</strong> Promueve la inyección de dependencias y el desacoplamiento mediante abstracciones.
+              </li>
+            </ul>
+          </div>
+
+          <!-- 📋 Estructura de la Respuesta -->
+          <div class="space-y-3">
+            <h2 class="text-xl font-bold text-white flex items-center gap-2 border-b border-gray-800 pb-2">
+              📋 Estructura de la Respuesta de la Skill
+            </h2>
+            <p>Cuando envías código a la skill, la respuesta sigue un formato estandarizado en 4 secciones:</p>
+            <div class="bg-gray-950 p-4 rounded-xl border border-gray-800 font-mono text-xs text-gray-300">
+              <p class="text-cyan-400 font-bold">1. 📊 Resumen General:</p>
+              <p class="text-gray-400 ml-4 mb-2">- Valoración global de calidad (0 a 100). Diagnóstico inicial del fragmento enviado.</p>
+              
+              <p class="text-red-400 font-bold">2. ⚠️ Puntos Críticos & Code Smells:</p>
+              <p class="text-gray-400 ml-4 mb-2">- Explicación detallada de las fallas encontradas (Legibilidad, SOLID, Seguridad, Rendimiento).</p>
+              
+              <p class="text-emerald-400 font-bold">3. ✨ Propuesta de Mejora / Refactorización:</p>
+              <p class="text-gray-400 ml-4 mb-2">- Código limpio corregido, con anotaciones de tipo y comentarios explicativos.</p>
+              
+              <p class="text-purple-400 font-bold">4. 💡 Buenas Prácticas Adicionales:</p>
+              <p class="text-gray-400 ml-4">- Recomendaciones de arquitectura o testing para llevar el módulo al siguiente nivel.</p>
+            </div>
+          </div>
+
+          <!-- ⚙️ Instrucciones para Ejecutar el Proyecto -->
+          <div class="space-y-3">
+            <h2 class="text-xl font-bold text-white flex items-center gap-2 border-b border-gray-800 pb-2">
+              ⚙️ Instrucciones para Ejecutar el Proyecto
+            </h2>
+            <p class="text-xs sm:text-sm">No se requieren dependencias complejas ni procesos de compilación pesados:</p>
+            
+            <div class="grid sm:grid-cols-2 gap-4 text-xs font-mono">
+              <div class="p-4 rounded-xl bg-gray-900 border border-gray-800 space-y-2">
+                <span class="text-cyan-400 font-bold block">Opción 1: Servidor Python</span>
+                <div class="bg-black/60 p-2 rounded flex justify-between items-center text-gray-300">
+                  <code>python -m http.server 3000</code>
+                  <button onclick="copySnippetText('python -m http.server 3000')" class="text-gray-400 hover:text-white"><i data-lucide="copy" class="w-3.5 h-3.5"></i></button>
+                </div>
+                <p class="text-[11px] text-gray-400">Abre http://localhost:3000</p>
+              </div>
+
+              <div class="p-4 rounded-xl bg-gray-900 border border-gray-800 space-y-2">
+                <span class="text-purple-400 font-bold block">Opción 2: Node.js (npx serve)</span>
+                <div class="bg-black/60 p-2 rounded flex justify-between items-center text-gray-300">
+                  <code>npx serve .</code>
+                  <button onclick="copySnippetText('npx serve .')" class="text-gray-400 hover:text-white"><i data-lucide="copy" class="w-3.5 h-3.5"></i></button>
+                </div>
+                <p class="text-[11px] text-gray-400">Inicia servidor ligero con Node</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 👨‍💻 Autor & Licencia -->
+          <div class="pt-4 border-t border-gray-800 flex flex-col sm:flex-row justify-between items-start sm:items-center text-xs text-gray-400 gap-2">
+            <div>
+              <p><strong>Autor:</strong> AI Code Review Specialist</p>
+              <p><strong>Licencia:</strong> MIT License</p>
+            </div>
+            <p class="italic text-gray-300">
+              “No se trata solo de que el código funcione, sino de que sea un buen código.” 💡
+            </p>
+          </div>
+
+        </div>
+
+        <!-- Raw Markdown Content (Hidden by default) -->
+        <div id="readme-raw-content" class="hidden p-6 sm:p-8 bg-[#060a12]">
+          <pre class="font-mono text-xs text-cyan-200 overflow-x-auto leading-relaxed select-all" id="raw-markdown-text"># 🚀 Code Review & Clean Code - AI Skill
+
+![Code Review & Clean Code Banner](https://img.shields.io/badge/AI%20Skill-Code%20Review%20%26%20Clean%20Code-06b6d4?style=for-the-badge&logo=openai&logoColor=white)
+![Status](https://img.shields.io/badge/Status-Active%20%26%20Production%20Ready-10b981?style=for-the-badge)
+![License](https://img.shields.io/badge/License-MIT-8b5cf6?style=for-the-badge)
+
+---
+
+## 📌 Descripción General
+
+**Code Review & Clean Code** es una habilidad de inteligencia artificial (*AI Skill*) diseñada para actuar como un **Software Engineer Senior** y auditor de código automatizado. 
+
+Su principal valor es analizar fragmentos de código, funciones o módulos completos en cualquier lenguaje de programación, detectando instantáneamente **malas prácticas**, **code smells**, **vulnerabilidades de seguridad** e **ineficiencias de rendimiento**, ofreciendo a su vez una versión refactorizada lista para producción.
+
+---
+
+## 🎯 Objetivo
+
+Garantizar que todo código desarrollado mantenga los estándares más altos de **mantenibilidad, legibilidad, seguridad y eficiencia**, permitiendo a desarrolladores y equipos acelerar sus revisiones de código (*Code Reviews*) sin sacrificar la calidad arquitectónica del software.
+
+---
+
+## ✨ Funcionalidades Principales
+
+* 🔍 **Análisis Estructural y Legibilidad:** Revisa convenciones de estilo (PEP8, TypeScript style guide, Clean Code guidelines), nombres descriptivos de variables/métodos y niveles de anidamiento.
+* 🧩 **Verificación de Principios SOLID:** Evalúa si las clases o componentes cumplen con los principios de diseño orientado a objetos y modularidad.
+* 🎨 **Sugerencia de Patrones de Diseño:** Identifica oportunidades para aplicar patrones como *Strategy*, *Factory*, *Observer*, *Adapter*, *Repository*, entre otros.
+* 🛡️ **Auditoría de Seguridad (OWASP Top 10):** Detecta inyecciones SQL/Command, falta de saneamiento de inputs, exposición de secretos y manejo inseguro de excepciones.
+* ⚡ **Optimización Algorítmica y Rendimiento:** Analiza complejidad temporal $O(n)$ y espacial $O(1)$, cuellos de botella en bucles y uso ineficiente de memoria.
+* 🛠️ **Refactorización Completa:** Entrega el código corregido, tipado y comentado, preservando la lógica de negocio intacta.
+
+---
+
+## 🕒 ¿Cuándo utilizar la Skill?
+
+1. **Antes de abrir un Pull Request (PR):** Para realizar un pre-audit personal y corregir observaciones antes de la revisión por pares.
+2. **Durante sesiones de Refactorización:** Al trabajar con código legado (*legacy code*) desordenado o difícil de mantener.
+3. **Al detectar problemas de rendimiento:** Cuando un módulo consume excesivos recursos de CPU o memoria.
+4. **Como herramienta de aprendizaje:** Para desarrolladores Juniors/Intermedios que desean entender el porqué de una mala práctica y cómo solucionarla aplicando buenas prácticas.
+
+---
+
+## 📐 Principios SOLID Analizados
+
+La skill evalúa cuantitativa y cualitativamente cada uno de los 5 principios SOLID:
+
+1. **S - Single Responsibility Principle (SRP):** Garantiza que cada clase/función tenga una sola razón para cambiar.
+2. **O - Open/Closed Principle (OCP):** Asegura que las entidades estén abiertas a la extensión pero cerradas a la modificación.
+3. **L - Liskov Substitution Principle (LSP):** Verifica que las subclases puedan sustituir a sus clases base sin romper la aplicación.
+4. **I - Interface Segregation Principle (ISP):** Evita interfaces infladas forzando contratos específicos y pequeños.
+5. **D - Dependency Inversion Principle (DIP):** Promueve la inyección de dependencias y el desacoplamiento mediante abstracciones.
+
+---
+
+## 📋 Estructura de la Respuesta de la Skill
+
+Cuando envías código a la skill, la respuesta sigue un formato estandarizado en 4 secciones:
+
+```markdown
+1. 📊 Resumen General:
+   - Valoración global de calidad (0 a 100).
+   - Diagnóstico inicial del fragmento enviado.
+
+2. ⚠️ Puntos Críticos & Code Smells:
+   - Explicación detallada de las fallas encontradas (Legibilidad, SOLID, Seguridad, Rendimiento).
+
+3. ✨ Propuesta de Mejora / Refactorización:
+   - Código limpio corregido, con anotaciones de tipo y comentarios explicativos.
+
+4. 💡 Buenas Prácticas Adicionales:
+   - Recomendaciones de arquitectura o testing para llevar el módulo al siguiente nivel.
+```
+
+---
+
+## 💻 Ejemplo de Uso
+
+### Código Original (Antes)
+
+```python
+# usuario.py
+def obtener_datos(usuario):
+    datos = []
+    for u in usuario:
+        datos.append({"id": u["id"], "nombre": u["nombre"]})
+    return datos
+```
+
+### Respuesta Refactorizada por la Skill (Después)
+
+```python
+# usuario.py
+def obtener_datos(usuarios: list[dict]) -> list[dict]:
+    """Obtiene y filtra los datos esenciales de una lista de usuarios.
+    
+    Aplica compresión de listas para optimizar la ejecución O(N).
+    """
+    return [
+        {"id": u["id"], "nombre": u["nombre"]} 
+        for u in usuarios
+    ]
+```
+
+---
+
+## 🛠️ Tecnologías Utilizadas en la Landing Page
+
+* **HTML5 Semantic:** Estructura limpia y accesible.
+* **Tailwind CSS (v3 CDN):** Framework de utilidades para estilizado responsive y diseño vanguardista.
+* **Lucide Icons:** Iconografía vectorial moderna para desarrolladores.
+* **JavaScript ES6+:** Interactividad para animaciones, simulador y lightbox.
+* **Google Fonts (Inter & JetBrains Mono):** Tipografía optimizada para lectura y código.
+
+---
+
+## ⚙️ Instrucciones para Ejecutar el Proyecto
+
+No se requieren dependencias complejas ni procesos de compilación.
+
+### Opción 1: Servidor local con Python
+```bash
+python -m http.server 3000
+```
+
+### Opción 2: Servidor con Node.js
+```bash
+npx serve .
+```
+
+---
+
+## 👨‍💻 Autor
+
+* **Skill Developer & Architect:** AI Code Review Specialist
+* **Proyecto:** Code Review & Clean Code AI Skill
+
+---
+
+*“No se trata solo de que el código funcione, sino de que sea un buen código.”* 💡</pre>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SECCIÓN ESPECIFICACIÓN DE LA SKILL (skill_code_review.md) -->
+  <section id="skill-prompt" class="py-20 relative bg-gray-950/60 border-t border-gray-800">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+        <div>
+          <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-md bg-purple-950/60 border border-purple-500/30 text-purple-300 text-xs font-semibold uppercase tracking-wider mb-3">
+            <i data-lucide="bot" class="w-4 h-4"></i>
+            <span>Archivo de Definición de Agente</span>
+          </div>
+          <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+            skill_code_review.md
+          </h2>
+          <p class="text-gray-400 text-sm mt-1">
+            Prompt de sistema oficial y especificación de agente listo para usar en Antigravity, Claude, ChatGPT o Cursor.
+          </p>
+        </div>
+
+        <button onclick="copySkillFileContent()" class="px-5 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-semibold text-xs shadow-lg shadow-purple-500/25 flex items-center space-x-2 transition">
+          <i data-lucide="copy" class="w-4 h-4"></i>
+          <span>Copiar Skill Prompt Completo</span>
+        </button>
+      </div>
+
+      <div class="glass-panel rounded-2xl border border-gray-800 overflow-hidden shadow-2xl">
+        <div class="bg-gray-900/80 px-4 py-3 border-b border-gray-800 flex items-center justify-between text-xs font-mono text-gray-400">
+          <div class="flex items-center space-x-2">
+            <i data-lucide="file-text" class="w-4 h-4 text-purple-400"></i>
+            <span class="text-white font-semibold">skill_code_review.md</span>
+          </div>
+          <span>YAML Frontmatter + Prompt</span>
+        </div>
+        
+        <div class="p-6 bg-[#080d17] overflow-x-auto">
+          <pre class="font-mono text-xs sm:text-sm text-purple-200 leading-relaxed" id="skill-file-text">---
+name: code-review-clean-code
+description: Analiza fragmentos de código o pull requests bajo principios SOLID, patrones de diseño, legibilidad y optimización de rendimiento. Úsalo cuando el usuario pida revisión de código, refactorización, detectar code smells, o evaluar buenas prácticas de programación.
+---
+
+# Asistente de Code Review y Clean Code
+
+Esta habilidad actúa como un revisor de código experto (Software Engineer Senior) especializado en buenas prácticas de programación, arquitectura limpia, principios SOLID y optimización de rendimiento.
+
+## Cuándo usar esta habilidad
+- Cuando el usuario proporcione código para analizar (*code review*).
+- Cuando el usuario pida detectar olores de código (*code smells*), vulnerabilidades o malas prácticas.
+- Cuando se requiera refactorizar código para mejorar su mantenibilidad, legibilidad o rendimiento.
+
+## Pasos para la revisión
+
+1. **Análisis Estructural y de Legibilidad:**
+   - Evalúa nombres de variables, funciones y clases (significativos y acordes al dominio).
+   - Revisa la complejidad ciclomática (funciones muy largas, anidadas o con demasiadas responsabilidades).
+   - Comprueba la correcta aplicación de convenciones de estilo según el lenguaje (por ejemplo, PEP8 para Python, convenciones de nombres en Java/TypeScript, etc.).
+
+2. **Evaluación de Principios SOLID y Patrones de Diseño:**
+   - **S (Single Responsibility):** Identifica clases o funciones que hacen más de lo que deben.
+   - **O (Open/Closed):** Revisa si el código está abierto a extensión pero cerrado a modificación.
+   - **L (Liskov Substitution):** Comprueba que las subtituciones de clases no rompan el comportamiento esperado.
+   - **I (Interface Segregation):** Evita interfaces o contratos sobrecargados.
+   - **D (Dependency Inversion):** Fomenta la inyección de dependencias y el desacoplamiento.
+   - Identifica si se pudo aplicar algún patrón de diseño clásico (Factory, Strategy, Observer, etc.) para simplificar la solución.
+
+3. **Seguridad y Rendimiento:**
+   - Detecta posibles vulnerabilidades comunes (inyecciones, manejo inseguro de datos, exposición de información sensible).
+   - Analiza la eficiencia algorítmica y posibles cuellos de botella (bucles innecesarios, uso ineficiente de memoria o consultas redundantes).
+
+4. **Estructura de Respuesta:**
+   Presenta el feedback de forma clara y constructiva utilizando el siguiente formato:
+   - **Resumen general:** Una valoración rápida del código.
+   - **Puntos críticos o *Code Smells* detectados:** Qué está mal y por qué afecta al proyecto.
+   - **Propuesta de Mejora / Refactorización:** El código corregido y optimizado con comentarios explicativos.
+   - **Buenas prácticas adicionales:** Sugerencias para llevar el código al siguiente nivel profesional.</pre>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Buenas Prácticas Adicionales (de la Infografía) -->
+  <section class="py-20 relative bg-[#060a12]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="text-center max-w-3xl mx-auto mb-16">
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+          ⭐ Buenas Prácticas de Cabecera
+        </h2>
+        <p class="mt-4 text-gray-400 text-base">
+          Los 6 mandamientos recomendados por la skill y la infografía para mantener tu código impecable:
+        </p>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        
+        <div class="glass-card p-6 rounded-2xl flex items-start space-x-4">
+          <div class="p-3 rounded-xl bg-cyan-500/10 text-cyan-400 shrink-0">
+            <i data-lucide="scissors" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h4 class="font-bold text-white text-base">Funciones Pequeñas</h4>
+            <p class="text-xs text-gray-400 mt-1">Escribe funciones con una sola responsabilidad concisa y menos de 20 líneas cuando sea posible.</p>
+          </div>
+        </div>
+
+        <div class="glass-card p-6 rounded-2xl flex items-start space-x-4">
+          <div class="p-3 rounded-xl bg-purple-500/10 text-purple-400 shrink-0">
+            <i data-lucide="tag" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h4 class="font-bold text-white text-base">Nombres Descriptivos</h4>
+            <p class="text-xs text-gray-400 mt-1">Evita abreviaciones crípticas como `tmp`, `fn` o `data1`. El código debe leerse como prosa en inglés o español.</p>
+          </div>
+        </div>
+
+        <div class="glass-card p-6 rounded-2xl flex items-start space-x-4">
+          <div class="p-3 rounded-xl bg-emerald-500/10 text-emerald-400 shrink-0">
+            <i data-lucide="shield-alert" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h4 class="font-bold text-white text-base">Manejo Seguro de Errores</h4>
+            <p class="text-xs text-gray-400 mt-1">Nunca tragues excepciones con `except: pass` ni expongas stacktraces sensibles en respuestas de usuario.</p>
+          </div>
+        </div>
+
+        <div class="glass-card p-6 rounded-2xl flex items-start space-x-4">
+          <div class="p-3 rounded-xl bg-blue-500/10 text-blue-400 shrink-0">
+            <i data-lucide="file-check" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h4 class="font-bold text-white text-base">Documenta el "Por qué"</h4>
+            <p class="text-xs text-gray-400 mt-1">El código explica el <em>qué</em>; los comentarios y docstrings deben explicar el <em>por qué</em> de decisiones complejas.</p>
+          </div>
+        </div>
+
+        <div class="glass-card p-6 rounded-2xl flex items-start space-x-4">
+          <div class="p-3 rounded-xl bg-yellow-500/10 text-yellow-400 shrink-0">
+            <i data-lucide="sparkles" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h4 class="font-bold text-white text-base">Automatiza con Linters</h4>
+            <p class="text-xs text-gray-400 mt-1">Integra ESLint, Prettier, Black, Flake8 o SonarQube en tus pipelines de integración continua (CI/CD).</p>
+          </div>
+        </div>
+
+        <div class="glass-card p-6 rounded-2xl flex items-start space-x-4">
+          <div class="p-3 rounded-xl bg-pink-500/10 text-pink-400 shrink-0">
+            <i data-lucide="heart-handshake" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h4 class="font-bold text-white text-base">KISS & YAGNI</h4>
+            <p class="text-xs text-gray-400 mt-1">Keep It Simple, Stupid & You Aren't Gonna Need It. No sobre-diseñes abstracciones antes de necesitarlas.</p>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Final Call to Action Banner -->
+  <section class="py-20 relative overflow-hidden bg-gradient-to-b from-gray-950 to-[#050810]">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+      <div class="p-10 sm:p-14 rounded-3xl glass-panel border border-cyan-500/30 glow-cyan">
+        <h2 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
+          ¿Listo para transformar la calidad de tu código?
+        </h2>
+        <p class="mt-4 text-gray-300 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">
+          Prueba la skill <strong class="text-cyan-400">Code Review & Clean Code</strong>, acelera tus Pull Requests y escribe software robusto y seguro desde el primer commit.
+        </p>
+
+        <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
+          <button onclick="scrollToSection('simulador')" class="px-8 py-4 rounded-xl bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 text-white font-bold text-base shadow-xl shadow-cyan-500/30 hover:scale-105 transition-all flex items-center space-x-3">
+            <i data-lucide="rocket" class="w-5 h-5"></i>
+            <span>Ir al Simulador en Vivo</span>
+          </button>
+          
+          <button onclick="copySkillFileContent()" class="px-8 py-4 rounded-xl glass-panel text-white hover:text-cyan-300 border border-gray-700 hover:border-cyan-500 font-bold text-base transition-all flex items-center space-x-2">
+            <i data-lucide="copy" class="w-5 h-5 text-purple-400"></i>
+            <span>Copiar Prompt para tu IA</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-12 border-t border-gray-800 bg-[#04060c] text-xs text-gray-500">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row justify-between items-center space-y-6 md:space-y-0">
+        
+        <div class="flex items-center space-x-3">
+          <div class="p-2 rounded-lg bg-cyan-500/20 text-cyan-400">
+            <i data-lucide="code-2" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <p class="font-bold text-white text-sm">Code Review & Clean Code AI</p>
+            <p class="text-[11px] text-gray-400">AI Skill • Senior Engineer & Code Auditor</p>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap items-center justify-center gap-6 text-gray-400 font-medium">
+          <a href="#video-demo" class="hover:text-cyan-400 transition">Video</a>
+          <a href="#infografia" class="hover:text-cyan-400 transition">Infografía</a>
+          <a href="#como-funciona" class="hover:text-cyan-400 transition">Proceso</a>
+          <a href="#solid" class="hover:text-cyan-400 transition">SOLID</a>
+          <a href="#simulador" class="hover:text-cyan-400 transition">Simulador</a>
+          <a href="#readme" class="hover:text-cyan-400 transition">README.md</a>
+        </div>
+
+        <div class="text-center md:text-right text-[11px]">
+          <p>Licencia MIT • 100% Client-Side</p>
+          <p class="text-gray-400 mt-0.5">“Clean Code Better Software”</p>
+        </div>
+
+      </div>
+    </div>
+  </footer>
+
+  <!-- Lightbox Modal for Infographic Fullscreen Zoom -->
+  <div id="lightbox-modal" class="fixed inset-0 z-50 hidden bg-black/95 backdrop-blur-md flex flex-col justify-between p-4 overflow-hidden">
+    <div class="flex items-center justify-between p-3 z-50 max-w-7xl mx-auto w-full">
+      <div class="flex items-center space-x-2 text-white text-sm font-semibold">
+        <i data-lucide="image" class="w-5 h-5 text-cyan-400"></i>
+        <span>Infografía Oficial: Code Review y Clean Code</span>
+      </div>
+      <div class="flex items-center space-x-3">
+        <a href="ChatGPT Image 8 oct 2026, 14_39_40.png" download="infografia.png" class="px-3.5 py-1.5 rounded-lg bg-gray-800 text-cyan-300 text-xs font-semibold flex items-center gap-1.5 hover:bg-gray-700 transition">
+          <i data-lucide="download" class="w-4 h-4"></i>
+          <span class="hidden sm:inline">Descargar</span>
+        </a>
+        <button onclick="closeLightbox()" class="bg-gray-800 hover:bg-gray-700 text-white p-2 rounded-lg transition" title="Cerrar">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Scaled Image Container -->
+    <div class="flex-1 flex items-center justify-center p-2 overflow-auto" onclick="closeLightbox()">
+      <img 
+        id="lightbox-img" 
+        src="ChatGPT Image 8 oct 2026, 14_39_40.png" 
+        onerror="handleImgError(this)"
+        alt="Infografía Ampliada Code Review y Clean Code" 
+        class="max-h-[88vh] max-w-full rounded-xl shadow-2xl object-contain border border-gray-800 cursor-zoom-out"
+      />
+    </div>
+
+    <div class="text-center text-[11px] text-gray-400 pb-2">
+      Presiona ESC o haz clic fuera para cerrar el visor
+    </div>
+  </div>
+
+  <!-- JavaScript Logic -->
+  <script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
+
+    // Smooth Scroll Helper
+    function scrollToSection(id) {
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    // Mobile Menu Toggle
+    function toggleMobileMenu() {
+      const menu = document.getElementById('mobile-menu');
+      menu.classList.toggle('hidden');
+    }
+
+    // Image Error Handler with URL fallbacks
+    function handleImgError(img) {
+      const sources = [
+        'ChatGPT%20Image%208%20oct%202026,%2014_39_40.png',
+        './ChatGPT Image 8 oct 2026, 14_39_40.png',
+        'infografia.png',
+        './infografia.png'
+      ];
+      let current = img.getAttribute('src');
+      let idx = sources.indexOf(current);
+      if (idx !== -1 && idx < sources.length - 1) {
+        img.src = sources[idx + 1];
+      }
+    }
+
+    // Lightbox Controls
+    function openLightbox() {
+      document.getElementById('lightbox-modal').classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+      document.getElementById('lightbox-modal').classList.add('hidden');
+      document.body.style.overflow = 'auto';
+    }
+
+    // Close Lightbox on ESC
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeLightbox();
+      }
+    });
+
+    // Toast Notification System
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      const msg = document.getElementById('toast-message');
+      msg.textContent = message;
+      toast.classList.remove('translate-y-20', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+      
+      setTimeout(() => {
+        toast.classList.remove('translate-y-0', 'opacity-100');
+        toast.classList.add('translate-y-20', 'opacity-0');
+      }, 2500);
+    }
+
+    // Copy Snippet Text
+    function copySnippetText(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        showToast('¡Comando copiado al portapapeles!');
+      });
+    }
+
+    // Copy Refactored Code
+    function copyRefactoredCode() {
+      const codeElement = document.getElementById('result-code');
+      const text = codeElement.innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        showToast('¡Código refactorizado copiado!');
+      });
+    }
+
+    // Copy README Markdown
+    function copyReadmeMarkdown() {
+      const text = document.getElementById('raw-markdown-text').innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        showToast('¡README.md copiado en formato Markdown!');
+      });
+    }
+
+    // Copy Skill File Content
+    function copySkillFileContent() {
+      const text = document.getElementById('skill-file-text').innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        showToast('¡Skill Prompt copiado!');
+      });
+    }
+
+    // Toggle README Rendered vs Raw View
+    function toggleReadmeView(view) {
+      const renderedTab = document.getElementById('tab-readme-rendered');
+      const rawTab = document.getElementById('tab-readme-raw');
+      const renderedContent = document.getElementById('readme-rendered-content');
+      const rawContent = document.getElementById('readme-raw-content');
+
+      if (view === 'rendered') {
+        renderedTab.className = 'px-4 py-2 rounded-xl text-xs font-medium transition bg-cyan-500 text-white shadow-md shadow-cyan-500/20';
+        rawTab.className = 'px-4 py-2 rounded-xl text-xs font-medium transition bg-gray-900 text-gray-300 border border-gray-800 hover:text-white';
+        renderedContent.classList.remove('hidden');
+        rawContent.classList.add('hidden');
+      } else {
+        rawTab.className = 'px-4 py-2 rounded-xl text-xs font-medium transition bg-cyan-500 text-white shadow-md shadow-cyan-500/20';
+        renderedTab.className = 'px-4 py-2 rounded-xl text-xs font-medium transition bg-gray-900 text-gray-300 border border-gray-800 hover:text-white';
+        rawContent.classList.remove('hidden');
+        renderedContent.classList.add('hidden');
+      }
+    }
+
+    // Preset Code Snippets for Playground
+    const snippets = {
+      python: {
+        lang: 'Lenguaje: Python 3',
+        code: `def obtener_datos(usuario):
+    datos = []
+    for u in usuario:
+        datos.append({"id": u["id"], "nombre": u["nombre"]})
+    return datos`,
+        score: '98 / 100',
+        summary: 'El código original resuelve la obtención de datos pero viola convenciones PEP8 de nomenclatura plural para colecciones, carece de anotaciones de tipo (type hints) y utiliza un ciclo for con append() que resulta más costoso e imperativo que una comprensión de lista idiomática.',
+        smells: [
+          { type: 'red', text: '<strong>Nombre ambiguo:</strong> Variable `usuario` en singular para representar una lista completa.' },
+          { type: 'amber', text: '<strong>Tipado ausente:</strong> Falta de anotaciones de tipo para parámetros (`list[dict]`) y retorno.' },
+          { type: 'blue', text: '<strong>Imperativo innecesario:</strong> `for ... append` puede reemplazarse por list comprehension optimizado.' }
+        ],
+        refactored: `<span class="text-emerald-400"># usuario.py (Refactorizado con Clean Code & Type Hints)</span>
+<span class="text-purple-400">def</span> <span class="text-blue-400">obtener_datos</span>(usuarios: <span class="text-yellow-300">list</span>[<span class="text-yellow-300">dict</span>]) -> <span class="text-yellow-300">list</span>[<span class="text-yellow-300">dict</span>]:
+    <span class="text-gray-400">"""Obtiene y filtra los datos esenciales de una lista de usuarios.
+    
+    Aplica compresión de listas para optimizar la ejecución O(N).
+    """</span>
+    <span class="text-purple-400">return</span> [
+        {<span class="text-emerald-300">"id"</span>: u[<span class="text-emerald-300">"id"</span>], <span class="text-emerald-300">"nombre"</span>: u[<span class="text-emerald-300">"nombre"</span>]} 
+        <span class="text-purple-400">for</span> u <span class="text-purple-400">in</span> usuarios
+    ]`,
+        practices: [
+          { title: 'Validación con Pydantic / Dataclasses', desc: 'Si los datos provienen de una API externa, define un esquema formal tipado para evitar KeyError.' },
+          { title: 'Cobertura de Pruebas Unitarias', desc: 'Implementa tests con pytest verificando casos de lista vacía y claves faltantes.' }
+        ]
+      },
+      typescript: {
+        lang: 'Lenguaje: TypeScript / Node.js',
+        code: `// UserController.ts
+export async function getUser(req: any, res: any) {
+  const id = req.query.id;
+  // Vulnerabilidad de inyección SQL directa
+  const query = "SELECT * FROM users WHERE id = " + id;
+  const user = await db.raw(query);
+  res.json({ status: 200, user: user });
+}`,
+        score: '45 / 100',
+        summary: 'Detectada vulnerabilidad crítica de seguridad (SQL Injection OWASP A03:2021) debido a la concatenación directa de parámetros de la URL sin parametrizar. Además, el uso de tipos `any` anula los beneficios de TypeScript y acopla la base de datos directamente al controlador.',
+        smells: [
+          { type: 'red', text: '<strong>CRÍTICO - SQL Injection:</strong> Concatenación de variable no sanitizada `req.query.id` en query crudo.' },
+          { type: 'amber', text: '<strong>Tipado inseguro:</strong> Uso indiscriminado de `any` en parámetros de request y response.' },
+          { type: 'blue', text: '<strong>Violación SRP:</strong> Controlador ejecutando consultas directas sin capa de servicio o repositorio.' }
+        ],
+        refactored: `<span class="text-emerald-400">// UserController.ts (Refactorizado con Parameterized Query & DTOs)</span>
+<span class="text-purple-400">import</span> { Request, Response } <span class="text-purple-400">from</span> <span class="text-emerald-300">'express'</span>;
+<span class="text-purple-400">import</span> { userRepository } <span class="text-purple-400">from</span> <span class="text-emerald-300">'../repositories/user.repository'</span>;
+
+<span class="text-purple-400">export async function</span> <span class="text-blue-400">getUser</span>(req: Request, res: Response): Promise&lt;Response&gt; {
+  <span class="text-purple-400">const</span> userId = Number(req.query.id);
+  
+  <span class="text-purple-400">if</span> (isNaN(userId)) {
+    <span class="text-purple-400">return</span> res.status(400).json({ error: <span class="text-emerald-300">'ID de usuario inválido'</span> });
+  }
+
+  <span class="text-purple-400">const</span> user = <span class="text-purple-400">await</span> userRepository.findById(userId);
+  <span class="text-purple-400">if</span> (!user) {
+    <span class="text-purple-400">return</span> res.status(404).json({ error: <span class="text-emerald-300">'Usuario no encontrado'</span> });
+  }
+
+  <span class="text-purple-400">return</span> res.status(200).json({ data: user });
+}`,
+        practices: [
+          { title: 'Patrón Repository', desc: 'Aísla las consultas de base de datos dentro de repositorios reutilizables y mockeables en pruebas.' },
+          { title: 'Validación de Esquemas con Zod', desc: 'Valida los query params con Zod o Joi antes de que ingresen a la lógica de negocio.' }
+        ]
+      },
+      solid: {
+        lang: 'Lenguaje: Java / OOP',
+        code: `// OrderManager.java
+public class OrderManager {
+    public void processOrder(Order order) {
+        // Valida la orden
+        if (order.getTotal() <= 0) throw new IllegalArgumentException();
+        // Guarda en base de datos
+        db.save(order);
+        // Envía correo de confirmación
+        smtpClient.sendEmail(order.getCustomerEmail(), "Orden confirmada");
+        // Imprime ticket fiscal
+        printer.printTicket(order);
+    }
+}`,
+        score: '58 / 100',
+        summary: 'Violación severa del principio de Responsabilidad Única (SRP). La clase OrderManager actúa como una "God Class" encargada de validación de negocio, persistencia en base de datos, envío de notificaciones por email e impresión de hardware.',
+        smells: [
+          { type: 'red', text: '<strong>Violación SOLID (SRP):</strong> 4 responsabilidades distintas en un solo método.' },
+          { type: 'amber', text: '<strong>Violación SOLID (DIP):</strong> Acoplamiento directo a instancias estáticas `db`, `smtpClient` y `printer`.' },
+          { type: 'blue', text: '<strong>Dificultad de Testing:</strong> Es imposible hacer pruebas unitarias sin levantar BD y hardware real.' }
+        ],
+        refactored: `<span class="text-emerald-400">// OrderService.java (Refactorizado con Inyección de Dependencias & Eventos)</span>
+<span class="text-purple-400">public class</span> <span class="text-yellow-300">OrderService</span> {
+    <span class="text-purple-400">private final</span> OrderValidator validator;
+    <span class="text-purple-400">private final</span> OrderRepository repository;
+    <span class="text-purple-400">private final</span> ApplicationEventPublisher eventPublisher;
+
+    <span class="text-purple-400">public</span> <span class="text-blue-400">OrderService</span>(OrderValidator validator, OrderRepository repo, ApplicationEventPublisher publisher) {
+        <span class="text-purple-400">this</span>.validator = validator;
+        <span class="text-purple-400">this</span>.repository = repo;
+        <span class="text-purple-400">this</span>.eventPublisher = publisher;
+    }
+
+    <span class="text-purple-400">public void</span> <span class="text-blue-400">processOrder</span>(Order order) {
+        validator.validate(order);
+        repository.save(order);
+        eventPublisher.publishEvent(<span class="text-purple-400">new</span> OrderProcessedEvent(order));
+    }
+}`,
+        practices: [
+          { title: 'Arquitectura Basada en Eventos (Observer)', desc: 'El envío de emails y la impresión de tickets deben ser listeners desacoplados de la transacción principal.' },
+          { title: 'Inversión de Dependencias (DIP)', desc: 'Utiliza interfaces para OrderRepository y usa Spring o Guice para inyectarlas.' }
+        ]
+      }
+    };
+
+    let activeSnippetKey = 'python';
+
+    function loadSnippet(key) {
+      activeSnippetKey = key;
+      const data = snippets[key];
+      
+      // Update buttons
+      ['python', 'typescript', 'solid'].forEach(k => {
+        const btn = document.getElementById(`btn-snippet-${k}`);
+        if (k === key) {
+          btn.className = 'px-3.5 py-1.5 rounded-lg text-xs font-mono font-medium transition bg-cyan-500/20 text-cyan-300 border border-cyan-500/50';
+        } else {
+          btn.className = 'px-3.5 py-1.5 rounded-lg text-xs font-mono font-medium transition bg-gray-900 text-gray-400 border border-gray-800 hover:text-white';
+        }
+      });
+
+      document.getElementById('current-lang-tag').innerText = data.lang;
+      document.getElementById('code-input').value = data.code;
+
+      // Update result section immediately
+      displayResult(data);
+    }
+
+    function displayResult(data) {
+      document.getElementById('score-text').innerText = data.score;
+      document.getElementById('result-summary').innerText = data.summary;
+      
+      // Render Smells
+      const smellsContainer = document.getElementById('result-smells');
+      smellsContainer.innerHTML = '';
+      data.smells.forEach(s => {
+        const li = document.createElement('li');
+        let colorClass = 'text-gray-300';
+        let iconName = 'info';
+        if (s.type === 'red') { colorClass = 'text-red-300/90'; iconName = 'x-circle'; }
+        if (s.type === 'amber') { colorClass = 'text-amber-300/90'; iconName = 'alert-triangle'; }
+        if (s.type === 'blue') { colorClass = 'text-blue-300/90'; iconName = 'info'; }
+        
+        li.className = `flex items-start space-x-2 ${colorClass}`;
+        li.innerHTML = `<i data-lucide="${iconName}" class="w-3.5 h-3.5 shrink-0 mt-0.5"></i><span>${s.text}</span>`;
+        smellsContainer.appendChild(li);
+      });
+
+      // Render Refactored Code
+      document.getElementById('result-code').innerHTML = data.refactored;
+
+      // Render Practices
+      const practicesContainer = document.getElementById('result-practices');
+      practicesContainer.innerHTML = '';
+      data.practices.forEach(p => {
+        const div = document.createElement('div');
+        div.className = 'p-3 rounded-xl bg-gray-900/60 border border-gray-800';
+        div.innerHTML = `<p class="font-semibold text-white">${p.title}</p><p class="text-gray-400 mt-1">${p.desc}</p>`;
+        practicesContainer.appendChild(div);
+      });
+
+      lucide.createIcons();
+    }
+
+    function triggerAuditSimulation() {
+      const btn = document.getElementById('run-audit-btn');
+      const progress = document.getElementById('audit-progress-container');
+      const stepLabel = document.getElementById('audit-step-label');
+
+      btn.disabled = true;
+      btn.classList.add('opacity-50');
+      progress.classList.remove('hidden');
+
+      const steps = [
+        '1/4 Analizando sintaxis y convenciones...',
+        '2/4 Evaluando principios SOLID y arquitectura...',
+        '3/4 Escaneando seguridad OWASP y rendimiento...',
+        '4/4 Generando refactorización limpia y sugerencias...'
+      ];
+
+      let currentStep = 0;
+      stepLabel.innerText = steps[currentStep];
+
+      const interval = setInterval(() => {
+        currentStep++;
+        if (currentStep < steps.length) {
+          stepLabel.innerText = steps[currentStep];
+        } else {
+          clearInterval(interval);
+          progress.classList.add('hidden');
+          btn.disabled = false;
+          btn.classList.remove('opacity-50');
+
+          // If user modified text, keep it or display current data
+          const currentData = snippets[activeSnippetKey];
+          displayResult(currentData);
+          showToast('✅ ¡Auditoría completada con éxito!');
+        }
+      }, 400);
+    }
+
+    function resetSimulator() {
+      loadSnippet('python');
+      showToast('Simulador restablecido al código inicial');
+    }
+  </script>
+</body>
+</html>
