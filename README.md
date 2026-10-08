@@ -103,14 +103,40 @@ def obtener_datos(usuarios: list[dict]) -> list[dict]:
 
 ---
 
+## 🏗️ Arquitectura del Proyecto por Capas
+
+El proyecto sigue una arquitectura frontend limpia, desacoplada y orientada a capas:
+
+```text
+Skillanalicode/
+├── index.html                     # Punto de entrada / Capa de Presentación HTML
+├── README.md                      # Documentación técnica completa
+├── skill_code_review.md           # Especificación y prompt formal del AI Skill
+└── src/                           # Código fuente estructurado por responsabilidades
+    ├── assets/                    # Recursos multimedia y estáticos
+    │   ├── images/
+    │   │   └── Infografia.png     # Infografía oficial de alta resolución
+    │   └── videos/
+    │       └── Video.mp4          # Video demostrativo de escaneo y refactor
+    ├── css/                       # Capa de Estilos y Diseño Visual
+    │   └── styles.css             # Tokens CSS, glassmorphism, glows y animaciones
+    └── js/                        # Capa de Lógica e Interactividad Frontend
+        ├── snippets.js            # Capa de Datos (Modelos de código y diagnósticos)
+        ├── simulator.js           # Capa de Servicio (Motor de auditoría en 4 fases)
+        └── app.js                 # Capa de Controlador (Eventos DOM, Lightbox y UI)
+```
+
+---
+
 ## 🛠️ Tecnologías Utilizadas en la Landing Page
 
 La landing page de presentación ha sido construida con tecnologías modernas de desarrollo web:
 
 * **HTML5 Semantic:** Estructura limpia y accesible.
-* **Tailwind CSS (v3 CDN):** Framework de utilidades para estilizado responsive y diseño de vanguardia (Dark theme, Glassmorphism, Ambient Glows).
+* **Tailwind CSS (v3 CDN):** Framework de utilidades para estilizado responsive y diseño de vanguardia.
+* **CSS3 Modular (`src/css/styles.css`):** Tokens de diseño, efectos Glassmorphism, resplandores ambientales y keyframes.
+* **JavaScript ES6+ Modular (`src/js/`):** Separación de datos, servicio y controlador UI.
 * **Lucide Icons:** Iconografía vectorial moderna para desarrolladores.
-* **JavaScript ES6+:** Interactividad para animaciones, modal simulador y navegación fluida.
 * **Google Fonts (Inter & JetBrains Mono):** Tipografía optimizada para lectura de texto y bloques de código.
 
 ---
@@ -140,11 +166,17 @@ npx serve .
 ---
 
 ## 👨‍💻 Autor
-
+* **Autores:** Samul Villa & Jaider Gallego
 * **Skill Developer & Architect:** AI Code Review Specialist
 * **Proyecto:** Code Review & Clean Code AI Skill
 * **Contacto / Feedback:** [Soporte & Sugerencias]
 
 ---
+
+# Como ejecutar: 
+
+
+´python -m http.server 3000´
+
 
 *“No se trata solo de que el código funcione, sino de que sea un buen código.”* 💡
